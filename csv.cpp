@@ -1,20 +1,54 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <sstream>
+
 using namespace std;
 
 int main(){
-    fstream fin;
-    string line;
+    int cont = 1;
+    while(cont){
+        fstream fin;
+        string line, word, temp, filename;
 
-    fin.open("numbers.csv", ios::in);
+        // get the name of the file
 
-    while(fin){
+        cout << "Enter the file name(without extension): ";
+        cin >> filename;
+        filename.append(".csv");
 
-        // read a line
-        getline(fin, line);
-        // print the line
-        cout << line << endl;
+        vector<vector<string>> content;
+        vector<string> row;
 
-    }    
-    fin.close();
+        fstream file (filename, ios::in);
+        if(file.is_open()){
+            while(getline(file, line)){
+                //ensure row does not have pre-existing data
+                row.clear();
+                // split input into words
+                stringstream str(line);
+                while(getline(str, word, ','))
+                row.push_back(word);
+                content.push_back(row);
+            }       
+            
+        }
+        else{
+            cout<<"Could not open the file\n";
+        }
+        
+    
+        for(int i=0;i<content.size();i++){
+            for(int j=0;j<content[i].size();j++){
+                cout<<content[i][j]<<" ";
+            }
+            cout<<"\n";
+        }
+        char response;
+        cout << "input another file? (y/n): ";
+        cin >> response;
+        if(response != 'y'){
+            cont = 0;
+        }
+    } 
 }
